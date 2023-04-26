@@ -1,0 +1,110 @@
+.container {
+    text-align: center;
+}
+
+.buttons{
+    display: grid;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #999;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.button{
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  background: #16ba3a;
+  width: 9.5em;
+  height: 2.5em;
+  border-radius: 10px;
+  border: none;
+}
+#equal{
+    background-color: #5555ff;
+    color: #fff;
+}
+.button:hover{
+   background-color:#167f00;
+   color: #fff;
+   transition: 0.5s ease-in-out;
+}
+
+:root {
+    --numberColor: #1e1f24;
+    --numberBg: #ecedf0;
+    --numberBgSelected: #ffa800;
+    --numberColorSelected: #1e1f24;
+    --numberSize: 2em;
+    --fontSize: 1.25em;
+}
+
+.tzoker {
+    --numberColor: #1e1f24;
+    --numberBg: #ecedf0;
+    --numberBgSelected: #008fe9;
+    --numberColorSelected: white;
+    --numberSize: 2em;
+    --fontSize: 1.25em;
+}
+
+.kino {
+    --numberColor: #1e1f24;
+    --numberBg: #ecedf0;
+    --numberBgSelected: #ffa800;
+    --numberColorSelected: #1e1f24;
+    --numberSize: 2em;
+    --fontSize: 1.25em;
+}
+
+.lotto {
+    --numberColor: #1e1f24;
+    --numberBg: #ecedf0;
+    --numberBgSelected: #fedc00;
+    --numberColorSelected: #1e1f24;
+    --numberSize: 2em;
+    --fontSize: 1.25em;
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+#table {
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    justify-items: center;
+    padding: 0.75em 1em;
+    gap: 0.75em;
+    width: fit-content;
+    margin: auto;
+}
+
+td {
+    border: 1px solid black;
+}
+
+.number {
+    width: var(--numberSize);
+    height: var(--numberSize);
+    font-size: var(--fontSize);
+    color: var(--numberColor);
+    background: var(--numberBg);
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Futura Now Text', sans-serif;
+    font-weight: 700;
+    line-height: 1.85em;
+    border: none;
+    transition: all .3s ease-in-out;
+}
+
+.number:hover {
+    /* filter: brightness(50%); */
+}
+
+.numberSelected {
+    background: var(--numberBgSelected);
+    color: var(--numberColorSelected);
+}
