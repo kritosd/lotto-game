@@ -45,15 +45,31 @@ function getNumbers() {
 }
 
 // TODO: Validate selction numbers on the future
-function validation() {
+function validation(numbers) {
     // return true; // remove this line to validate
-    var selectedCount = getNumbers().length;
+    var selectedCount = numbers.length;
     return selectedCount >= minSelectionNumbers && selectedCount <= maxSelectionNumbers;
 }
 
+async function send(numbers)  {
+    const response = await fetch('http://localhost//lotto/server/api/endpoint.php', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "numbers": numbers })
+    });
+    const jsonData = await response.json();
+    if (jsonData) {
+        alert(jsonData.numbers);
+    }
+}
+
 $(".submit").click(function() {
-    if (validation()) {
-        alert(getNumbers());
+    const numbers = getNumbers();
+    if (validation(numbers)) {
+        send(numbers);
     } else {
         alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
     }
