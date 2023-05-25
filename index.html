@@ -1,6 +1,3 @@
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->
-<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link href="https://fonts.cdnfonts.com/css/futura-now-text" rel="stylesheet">
 
@@ -12,7 +9,118 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./index.css">
+    <style>
+        .container {
+            text-align: center;
+        }
+
+        .buttons{
+            display: grid;
+            border-bottom: 1px solid #999;
+            border-left: 1px solid #999;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .button{
+        text-align: center;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        color: white;
+        background: #16ba3a;
+        width: 9.5em;
+        height: 2.5em;
+        border-radius: 10px;
+        border: none;
+        }
+        #equal{
+            background-color: #5555ff;
+            color: #fff;
+        }
+        .button:hover{
+        background-color:#167f00;
+        color: #fff;
+        transition: 0.5s ease-in-out;
+        }
+
+        :root {
+            --numberColor: #1e1f24;
+            --numberBg: #ecedf0;
+            --numberBgSelected: #ffa800;
+            --numberColorSelected: #1e1f24;
+            --numberSize: 2em;
+            --fontSize: 1.25em;
+        }
+
+        .tzoker {
+            --numberColor: #1e1f24;
+            --numberBg: #ecedf0;
+            --numberBgSelected: #008fe9;
+            --numberColorSelected: white;
+            --numberSize: 2em;
+            --fontSize: 1.25em;
+        }
+
+        .kino {
+            --numberColor: #1e1f24;
+            --numberBg: #ecedf0;
+            --numberBgSelected: #ffa800;
+            --numberColorSelected: #1e1f24;
+            --numberSize: 2em;
+            --fontSize: 1.25em;
+        }
+
+        .lotto {
+            --numberColor: #1e1f24;
+            --numberBg: #ecedf0;
+            --numberBgSelected: #fedc00;
+            --numberColorSelected: #1e1f24;
+            --numberSize: 2em;
+            --fontSize: 1.25em;
+        }
+
+        .table {
+            border-collapse: collapse;
+        }
+
+        #table {
+            display: grid;
+            grid-template-columns: repeat(10,1fr);
+            justify-items: center;
+            padding: 0.75em 1em;
+            gap: 0.75em;
+            width: fit-content;
+            margin: auto;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        .number {
+            width: var(--numberSize);
+            height: var(--numberSize);
+            font-size: var(--fontSize);
+            color: var(--numberColor);
+            background: var(--numberBg);
+            border-radius: 50%;
+            text-align: center;
+            cursor: pointer;
+            font-family: 'Futura Now Text', sans-serif;
+            font-weight: 700;
+            line-height: 1.85em;
+            border: none;
+            transition: all .3s ease-in-out;
+        }
+
+        .number:hover {
+            /* filter: brightness(50%); */
+        }
+
+        .numberSelected {
+            background: var(--numberBgSelected);
+            color: var(--numberColorSelected);
+        }
+    </style>
 </head>
 <body>
     <section>
@@ -21,6 +129,87 @@
             <button class="button submit">SUBMIT</button>
         </div>
     </section>
-    <script src="./index.js"></script>
 </body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const game = urlParams.get('game');
+    const table = document.getElementById('table');
+    table.classList.add(game);
+
+    let maxNumbers = 10;
+    let minSelectionNumbers = 2;
+    let maxSelectionNumbers = 12;
+    let Game = '';
+    switch (game) {
+        case 'tzoker':
+            Game = 'tzoker';
+            maxNumbers = 45;
+            break;
+        case 'kino':
+            Game = 'kino';
+            maxNumbers = 80;
+            break;
+        case 'lotto':
+        default:
+            Game = 'lotto';
+            maxNumbers = 49;
+            break;
+    }
+
+    const displayNumbers = Array.from({length: maxNumbers}, (_, i) => i + 1)
+
+    displayNumbers.map( displayNumber => {
+        let p = table.insertAdjacentHTML('beforeend', `<button value="${displayNumber}" class="number ">${displayNumber}</button>`);
+    });
+
+    $(".number").click(function() {
+        var element = $(this);
+        if (element.hasClass('numberSelected')) {
+            element.removeClass('numberSelected');
+        } else {
+            element.addClass('numberSelected');
+        }
+    });
+
+
+    function getNumbers() {
+        let numbersSelected = Array.from(document.getElementsByClassName('numberSelected'));
+        let numbers = Array();
+        numbersSelected.map( number => {
+            numbers.push(number.value);
+        });
+        return numbers;
+    }
+
+    // TODO: Validate selction numbers on the future
+    function validation(numbers) {
+        return true; // remove this line to validate
+        var selectedCount = numbers.length;
+        return selectedCount >= minSelectionNumbers && selectedCount <= maxSelectionNumbers;
+    }
+
+    async function send(numbers)  {
+        const response = await fetch('http://localhost//lotto/server/api/endpoint.php', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "numbers": numbers, "game": Game })
+        });
+        const jsonData = await response.json();
+        if (jsonData) {
+            alert(jsonData.numbers);
+        }
+    }
+
+    $(".submit").click(function() {
+        const numbers = getNumbers();
+        if (validation(numbers)) {
+            send(numbers);
+        } else {
+            alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
+        }
+    });
+</script>
 </html>
