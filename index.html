@@ -110,13 +110,23 @@
             line-height: 1.85em;
             border: none;
             transition: all .3s ease-in-out;
+            outline: none;
         }
 
-        .number:hover {
+        .number:hover,
+        .number:focus {
             /* filter: brightness(50%); */
+            color: var(--numberColor);
+            background: var(--numberBg);
         }
 
         .numberSelected {
+            background: var(--numberBgSelected);
+            color: var(--numberColorSelected);
+        }
+
+        .numberSelected:hover,
+        .numberSelected:focus {
             background: var(--numberBgSelected);
             color: var(--numberColorSelected);
         }
