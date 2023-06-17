@@ -12,6 +12,10 @@
     <style>
         .container {
             text-align: center;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
         }
 
         .buttons{
@@ -21,16 +25,25 @@
             grid-template-columns: 1fr 1fr 1fr 1fr;
         }
         .button{
-        text-align: center;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        color: white;
-        background: #16ba3a;
-        width: 9.5em;
-        height: 2.5em;
-        border-radius: 10px;
-        border: none;
+            align-self: center;
+            text-align: center;
+            font-size: 3vw;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            background: #16ba3a;
+            width: 9.5em;
+            height: 2.5em;
+            border-radius: 10px;
+            border: none;
+        }
+        @media screen and (min-width: 500px) {
+            .button {
+                font-size: 1em!important;
+            }
+            .number {
+                font-size: 1.25em!important;
+            }
         }
         #equal{
             background-color: #5555ff;
@@ -47,8 +60,9 @@
             --numberBg: #ecedf0;
             --numberBgSelected: #ffa800;
             --numberColorSelected: #1e1f24;
-            --numberSize: 2em;
-            --fontSize: 1.25em;
+            --numberSize: calc(100vw / 10 - 10px);
+            --maxNumberSize: 2em;
+            --fontSize: 3vw;
         }
 
         .tzoker {
@@ -56,8 +70,9 @@
             --numberBg: #ecedf0;
             --numberBgSelected: #008fe9;
             --numberColorSelected: white;
-            --numberSize: 2em;
-            --fontSize: 1.25em;
+            --numberSize: calc(100vw / 10 - 10px);
+            --maxNumberSize: 2em;
+            --fontSize: 3vw;
         }
 
         .kino {
@@ -65,8 +80,9 @@
             --numberBg: #ecedf0;
             --numberBgSelected: #ffa800;
             --numberColorSelected: #1e1f24;
-            --numberSize: 2em;
-            --fontSize: 1.25em;
+            --numberSize: calc(100vw / 10 - 10px);
+            --maxNumberSize: 2em;
+            --fontSize: 3vw;
         }
 
         .lotto {
@@ -74,8 +90,9 @@
             --numberBg: #ecedf0;
             --numberBgSelected: #fedc00;
             --numberColorSelected: #1e1f24;
-            --numberSize: 2em;
-            --fontSize: 1.25em;
+            --numberSize: calc(100vw / 10 - 10px);
+            --maxNumberSize: 2em;
+            --fontSize: 3vw;
         }
 
         .table {
@@ -84,7 +101,7 @@
 
         #table {
             display: grid;
-            grid-template-columns: repeat(10,1fr);
+            grid-template-columns: repeat(10,minmax(0,1fr));
             justify-items: center;
             padding: 0.75em 1em;
             gap: 0.75em;
@@ -93,12 +110,18 @@
         }
 
         td {
+            max-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             border: 1px solid black;
         }
 
         .number {
             width: var(--numberSize);
             height: var(--numberSize);
+            max-width: var(--maxNumberSize);
+            max-height: var(--maxNumberSize);
             font-size: var(--fontSize);
             color: var(--numberColor);
             background: var(--numberBg);
@@ -107,10 +130,13 @@
             cursor: pointer;
             font-family: 'Futura Now Text', sans-serif;
             font-weight: 700;
-            line-height: 1.85em;
+            line-height: var(--fontSize);
             border: none;
             transition: all .3s ease-in-out;
             outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .number:hover,
@@ -130,6 +156,39 @@
             background: var(--numberBgSelected);
             color: var(--numberColorSelected);
         }
+
+
+
+        #resultTable {
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #resultTable {
+            display: flex;
+            justify-content: center;
+            padding-top: 10px;
+        }
+        #resultTable table {
+            border-collapse: collapse;
+            text-align: center;
+            width: 100%;
+        }
+        #resultTable table thead {
+            font-weight: 700;
+        }
+        #resultTable table tbody tr td {
+            border: 2px solid black;
+        }
+
+        #resultTable table:first-child tbody tr td:first-child {
+            border: 1px solid black;;
+        }
+
+        #resultTable table:last-child {
+            margin-left: -2px;
+        }
+
     </style>
 </head>
 <body>
@@ -137,6 +196,7 @@
         <div class="container">
             <div id="table"></div>
             <button class="button submit">SUBMIT</button>
+            <div id="resultTable"></div>
         </div>
     </section>
 </body>
@@ -209,7 +269,34 @@
         });
         const jsonData = await response.json();
         if (jsonData) {
-            alert(jsonData.numbers);
+            const resultTable = document.getElementById('resultTable');
+            resultTable.innerHTML = "";
+            Object.values(jsonData).forEach( (result, index) => {
+                let tr = '';
+                let rows = '';
+                result.values.map( row => {
+                    let totalRow = '';
+                    if(index === 0) {
+                        totalRow += `<td>${row.counter}</td>`;
+                    }
+                    totalRow += `<td>${row.times}</td>`;
+                    totalRow += `<td>${row.absense}</td>`;
+                    totalRow += `<td>${row.odd}</td>`;
+                    tr = `<tr>${totalRow}</tr>`;
+                    rows += tr;
+                })
+                let plithos = '';
+                if (index === 0 ) {
+                    plithos = `<td rowspan="2">Πλήθος</td>`;
+                }
+                
+                let head = '';
+                result.headers.map( row => {
+                    head += `<td>${row}</td>`;
+                });
+                head = `<tr>${head}</tr>`;
+                let table = resultTable.insertAdjacentHTML('beforeend', `<table><thead><tr>${plithos}<td colspan="3">${result.name}</td></tr>${head}</thead>${rows}</table>`);
+            });
         }
     }
 
