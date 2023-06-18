@@ -259,7 +259,7 @@
     }
 
     async function send(numbers)  {
-        const response = await fetch('http://localhost//lotto/server/api/endpoint.php', {
+        const response = await fetch('https://kino20.gr/selections/endpoint.php', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -271,10 +271,11 @@
         if (jsonData) {
             const resultTable = document.getElementById('resultTable');
             resultTable.innerHTML = "";
-            Object.values(jsonData).forEach( (result, index) => {
+            Object.values(jsonData).forEach( (res, index) => {
+                const result = res[0];
                 let tr = '';
                 let rows = '';
-                result.values.map( row => {
+                Object.values(result.values).map( row => {
                     let totalRow = '';
                     if(index === 0) {
                         totalRow += `<td>${row.counter}</td>`;
