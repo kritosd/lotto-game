@@ -18,20 +18,19 @@
             margin: auto;
         }
 
-        .buttons{
-            display: grid;
-            border-bottom: 1px solid #999;
-            border-left: 1px solid #999;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+        .buttonsContainer {
+            display: flex;
+            justify-content: space-evenly;
         }
+
         .button{
             align-self: center;
             text-align: center;
             font-size: 3vw;
             font-weight: 600;
             cursor: pointer;
-            color: white;
-            background: #16ba3a;
+            color: black;
+            background: #ecedf0;
             width: 9.5em;
             height: 2.5em;
             border-radius: 10px;
@@ -50,9 +49,17 @@
             color: #fff;
         }
         .button:hover{
-        background-color:#167f00;
-        color: #fff;
-        transition: 0.5s ease-in-out;
+            background-color: #dbdcdf;
+            transition: 0.5s ease-in-out;
+        }
+
+        .button.submit{
+            color: white;
+            background: #16ba3a;
+        }
+        .button.submit:hover{
+            background-color:#167f00;
+            color: #fff;
         }
 
         :root {
@@ -90,6 +97,16 @@
             --numberBg: #ecedf0;
             --numberBgSelected: #fedc00;
             --numberColorSelected: #1e1f24;
+            --numberSize: calc(100vw / 10 - 10px);
+            --maxNumberSize: 2em;
+            --fontSize: 3vw;
+        }
+        
+        .extra5 {
+            --numberColor: #1e1f24;
+            --numberBg: #ecedf0;
+            --numberBgSelected: #A8226F;
+            --numberColorSelected: white;
             --numberSize: calc(100vw / 10 - 10px);
             --maxNumberSize: 2em;
             --fontSize: 3vw;
@@ -195,7 +212,10 @@
     <section>
         <div class="container">
             <div id="table"></div>
-            <button class="button submit">SUBMIT</button>
+            <div class="buttonsContainer">
+                <button class="button submit">ΕΛΕΓΧΟΣ</button>
+                <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
+            </div>
             <div id="resultTable"></div>
         </div>
     </section>
@@ -220,6 +240,9 @@
             maxNumbers = 80;
             break;
         case 'lotto':
+        case 'extra5':
+            Game = 'extra5';
+            maxNumbers = 35;
         default:
             Game = 'lotto';
             maxNumbers = 49;
@@ -241,6 +264,12 @@
         }
     });
 
+    function clearNumbers(numbers) {
+        let numbersSelected = Array.from(document.getElementsByClassName('numberSelected'));
+        numbersSelected.map( number => {
+            $(number).removeClass('numberSelected');
+        });
+    }
 
     function getNumbers() {
         let numbersSelected = Array.from(document.getElementsByClassName('numberSelected'));
@@ -259,7 +288,7 @@
     }
 
     async function send(numbers)  {
-        const response = await fetch('https://kino20.gr/selections/endpoint.php', {
+        const response = await fetch('https://numerics.gr/selections/endpoint.php', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -280,9 +309,15 @@
                     if(index === 0) {
                         totalRow += `<td>${row.counter}</td>`;
                     }
-                    totalRow += `<td>${row.times}</td>`;
-                    totalRow += `<td>${row.absense}</td>`;
-                    totalRow += `<td>${row.odd}</td>`;
+                    if (typeof row.times !== 'undefined') {
+                        totalRow += `<td>${row.times}</td>`;
+                    }
+                    if (typeof row.absense !== 'undefined') {
+                        totalRow += `<td>${row.absense}</td>`;
+                    }
+                    if (typeof row.odd !== 'undefined') {
+                        totalRow += `<td>${row.odd}</td>`;
+                    }
                     tr = `<tr>${totalRow}</tr>`;
                     rows += tr;
                 })
@@ -308,6 +343,10 @@
         } else {
             alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
         }
+    });
+
+    $(".clear").click(function() {
+        clearNumbers();
     });
 </script>
 </html>
