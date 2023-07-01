@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .container {
+        #container {
             text-align: center;
             max-width: 540px;
             display: flex;
@@ -21,6 +21,9 @@
         .buttonsContainer {
             display: flex;
             justify-content: space-evenly;
+            width: fit-content;
+            margin: auto;
+            gap: 10px;
         }
 
         .button{
@@ -110,6 +113,23 @@
             --numberSize: calc(100vw / 10 - 10px);
             --maxNumberSize: 2em;
             --fontSize: 3vw;
+        }
+
+        @media screen and (min-width: 900px) {
+            #container {
+                flex-direction: row;
+                width: 100%;
+                max-width: unset;
+                justify-content: center;
+            }
+            .tableContainer {
+                flex: 1;
+            }
+            #resultTable {
+                flex: 1;
+                height: fit-content;
+                align-self: center;
+            }
         }
 
         .table {
@@ -210,13 +230,14 @@
 </head>
 <body>
     <section>
-        <div class="container">
-            <div id="table"></div>
-            <div class="buttonsContainer">
-                <button class="button submit">ΕΛΕΓΧΟΣ</button>
-                <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
+        <div id="container">
+            <div class="tableContainer">
+                <div id="table"></div>
+                <div class="buttonsContainer">
+                    <button class="button submit">ΕΛΕΓΧΟΣ</button>
+                    <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
+                </div>
             </div>
-            <div id="resultTable"></div>
         </div>
     </section>
 </body>
@@ -298,8 +319,14 @@
         });
         const jsonData = await response.json();
         if (jsonData) {
-            const resultTable = document.getElementById('resultTable');
-            resultTable.innerHTML = "";
+            let resultTable = document.getElementById('resultTable');
+            if(resultTable) {
+                resultTable.innerHTML = "";
+            } else {
+                const container = document.getElementById('container');
+                container.insertAdjacentHTML('beforeend', "<div id='resultTable' />");
+                resultTable = document.getElementById('resultTable');
+            }
             Object.values(jsonData).forEach( (res, index) => {
                 const result = res[0];
                 let tr = '';
@@ -347,6 +374,8 @@
 
     $(".clear").click(function() {
         clearNumbers();
+        const resultTable = document.getElementById("resultTable");
+        resultTable.remove();
     });
 </script>
 </html>
