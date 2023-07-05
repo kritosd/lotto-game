@@ -128,7 +128,7 @@
             #resultTable {
                 flex: 1;
                 height: fit-content;
-                align-self: center;
+                align-self: flex-start;
             }
         }
 
@@ -205,7 +205,7 @@
         #resultTable {
             display: flex;
             justify-content: center;
-            padding-top: 10px;
+            padding-top: 0.75em;
         }
         #resultTable table {
             border-collapse: collapse;
@@ -239,6 +239,7 @@
                     <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
                 </div>
             </div>
+            <div id="resultTable"></div>
         </div>
     </section>
 </body>
@@ -282,6 +283,7 @@
     });
 
     $(".number").click(function() {
+        clearResultTable();
         var element = $(this);
         if (element.hasClass('numberSelected')) {
             element.removeClass('numberSelected');
@@ -324,14 +326,14 @@
         });
         const jsonData = await response.json();
         if (jsonData) {
-            let resultTable = document.getElementById('resultTable');
-            if(resultTable) {
-                resultTable.innerHTML = "";
-            } else {
-                const container = document.getElementById('container');
-                container.insertAdjacentHTML('beforeend', "<div id='resultTable' />");
-                resultTable = document.getElementById('resultTable');
-            }
+            let resultTable = clearResultTable();
+            // if(resultTable) {
+            //     resultTable.innerHTML = "";
+            // } else {
+            //     const container = document.getElementById('container');
+            //     container.insertAdjacentHTML('beforeend', "<div id='resultTable' />");
+            //     resultTable = document.getElementById('resultTable');
+            // }
             Object.values(jsonData).forEach( (res, index) => {
                 const result = res[0];
                 let tr = '';
@@ -368,6 +370,12 @@
         }
     }
 
+    function clearResultTable() {
+        const resultTable = document.getElementById("resultTable");
+        resultTable.innerHTML = "";
+        return resultTable;
+    }
+
     $(".submit").click(function() {
         const numbers = getNumbers();
         if (validation(numbers)) {
@@ -378,9 +386,8 @@
     });
 
     $(".clear").click(function() {
+        clearResultTable();
         clearNumbers();
-        const resultTable = document.getElementById("resultTable");
-        resultTable.remove();
     });
 </script>
 </html>
