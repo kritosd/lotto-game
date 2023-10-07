@@ -237,6 +237,7 @@
                 <div class="buttonsContainer">
                     <button class="button submit">ΕΛΕΓΧΟΣ</button>
                     <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
+                    <button class="button addToBetslip">ADD TO BETSLIP</button>
                 </div>
             </div>
             <div id="resultTable"></div>
@@ -370,6 +371,30 @@
         }
     }
 
+    async function addToBetslip(numbers) {
+        
+        const url = `kino20.gr/selections/echo_numbers.php?bettype=1&selections=${numbers.toString()}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.text(); // Assuming the response is HTML content
+            })
+            .then(html => {
+                // Create a new HTML document and set its content to the response HTML
+                // const newDoc = document.implementation.createHTMLDocument('New Page');
+                // newDoc.documentElement.innerHTML = html;
+
+                // Open the new page in the current tab
+                // document.open();
+                // document.write(newDoc.documentElement.innerHTML);
+                // document.close();
+            })
+            .catch(error => console.error('Error making POST request:', error));
+    }
+
     function clearResultTable() {
         const resultTable = document.getElementById("resultTable");
         resultTable.innerHTML = "";
@@ -388,6 +413,15 @@
     $(".clear").click(function() {
         clearResultTable();
         clearNumbers();
+    });
+
+    $(".addToBetslip").click(function() {
+        const numbers = getNumbers();
+        if (validation(numbers)) {
+            addToBetslip(numbers);
+        } else {
+            alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
+        }
     });
 </script>
 </html>

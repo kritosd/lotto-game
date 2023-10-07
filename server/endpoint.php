@@ -14,3 +14,32 @@ if ($method == 'POST') {
 	// To send only the number ex: echo json_encode($data->numbers);
 	echo json_encode($data);
 }
+
+if ($method == 'GET') {
+	$bettype = intval($_GET['bettype']);
+	$selections = $_GET['selections'] ? array_map('intval', explode(',', $_GET['selections'] )) : [];
+	
+	$betslip = array('betslip' =>
+		array([
+			'gameType' => "KINO",
+			'wager' => array(
+				'boards' => array([
+						"betType" => $bettype,
+						"boardId" => 1,
+						"panels" => array([
+							"selection" => $selections,
+							"quickPick" => true
+						]),
+						"multipliers" => 1,
+						"systems" => null,
+					],
+					"participatingDraws" => array(
+						"multipleDraws" => 1
+					)
+				)
+			)
+		])
+	);
+
+	echo json_encode($betslip);
+}
