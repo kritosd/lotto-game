@@ -373,24 +373,17 @@
 
     async function addToBetslip(numbers) {
         
-        const url = `kino20.gr/selections/echo_numbers.php?bettype=1&selections=${numbers.toString()}`;
+        const url = `https://kino20.gr/selections/echo_numbers.php?bettype=1&selections=${numbers.toString()}`;
 
         fetch(url)
             .then(response => {
                 if (!response.ok) {
                 throw new Error('Network response was not ok');
                 }
-                return response.text(); // Assuming the response is HTML content
+                return response.json(); // Assuming the response is JSON content
             })
-            .then(html => {
-                // Create a new HTML document and set its content to the response HTML
-                // const newDoc = document.implementation.createHTMLDocument('New Page');
-                // newDoc.documentElement.innerHTML = html;
-
-                // Open the new page in the current tab
-                // document.open();
-                // document.write(newDoc.documentElement.innerHTML);
-                // document.close();
+            .then(response => {
+                window.open(response.url, '_blank');
             })
             .catch(error => console.error('Error making POST request:', error));
     }

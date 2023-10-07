@@ -41,5 +41,7 @@ if ($method == 'GET') {
 		])
 	);
 
-	echo json_encode($betslip);
+	$redirectUrl = 'https://opaponline.opap.gr?data=' . base64_encode(json_encode($betslip));
+
+	echo json_encode(array('url' => $redirectUrl));
 }
