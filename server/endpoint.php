@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header('Content-Type: application/json; charset=utf-8');
+require_once("/home/numerics/vendor/autoload.php");
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method == 'POST') {
@@ -33,15 +34,16 @@ if ($method == 'GET') {
 						"multipliers" => 1,
 						"systems" => null,
 					],
-					"participatingDraws" => array(
-						"multipleDraws" => 1
-					)
+				),
+				"participatingDraws" => array(
+					"multipleDraws" => 1
 				)
 			)
 		])
 	);
-
-	$redirectUrl = 'https://opaponline.opap.gr?data=' . base64_encode(json_encode($betslip));
+	
+	$compressed = \LZCompressor\LZString::compressToEncodedURIComponent(json_encode($betslip));
+	$redirectUrl = 'https://opaponline.opap.gr?obtl=' . $compressed;
 
 	echo json_encode(array('url' => $redirectUrl));
 }
