@@ -238,6 +238,7 @@
                     <button class="button submit">ΕΛΕΓΧΟΣ</button>
                     <button class="button clear">ΚΑΘΑΡΙΣΜΟΣ</button>
                     <button class="button addToBetslip">ADD TO BETSLIP</button>
+                    <button class="button addToBetslipMultiBoard">ADD TO BETSLIP MULTI BOARD</button>
                 </div>
             </div>
             <div id="resultTable"></div>
@@ -388,6 +389,22 @@
             .catch(error => console.error('Error making POST request:', error));
     }
 
+    async function addToBetslipMultiBoard(numbers){
+        const url = `https://kino20.gr/selections/echo_numbers.php?version=2&bettype=1&selections=${numbers.toString()}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json(); // Assuming the response is JSON content
+            })
+            .then(response => {
+                window.open(response.url, '_blank');
+            })
+            .catch(error => console.error('Error making POST request:', error));
+    }
+
     function clearResultTable() {
         const resultTable = document.getElementById("resultTable");
         resultTable.innerHTML = "";
@@ -412,6 +429,15 @@
         const numbers = getNumbers();
         if (validation(numbers)) {
             addToBetslip(numbers);
+        } else {
+            alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
+        }
+    });
+    
+    $(".addToBetslipMultiBoard").click(function() {
+        const numbers = getNumbers();
+        if (validation(numbers)) {
+            addToBetslipMultiBoard(numbers);
         } else {
             alert('You need to select '+minSelectionNumbers+' - '+maxSelectionNumbers+' numbers');
         }

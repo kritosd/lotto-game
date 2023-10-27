@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header('Content-Type: application/json; charset=utf-8');
-require_once("/home/numerics/vendor/autoload.php");
+require_once("./vendor/autoload.php");
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method == 'POST') {
@@ -16,7 +16,49 @@ if ($method == 'POST') {
 	echo json_encode($data);
 }
 
-if ($method == 'GET') {
+if ($method == 'GET' && isset($_GET['version']) && $_GET['version'] == '2') {
+	$bettype = intval($_GET['bettype']);
+	$selections = $_GET['selections'] ? array_map('intval', explode(',', $_GET['selections'] )) : [];
+	
+	$boards = [];
+	for ($i = 1; $i <= 3; $i++) {
+		array_push($boards, [
+			"betType" => $bettype,
+			"boardId" => $i,
+			"panels" => array([
+				"selection" => $selections,
+				"quickPick" => true
+			]),
+			"multipliers" => 1,
+			"systems" => null,
+		]);
+		$selections = array_map(
+			function ($item) {
+				if ($item >= 80) { return 1; }
+				return ++$item;
+			},
+			$selections
+		);
+	}
+	
+	$betslip = array('betslip' =>
+		array([
+			'gameType' => "KINO",
+			'wager' => array(
+				'boards' => $boards,
+				"participatingDraws" => array(
+					"multipleDraws" => 1
+				)
+			)
+		])
+	);
+	
+	$compressed = \LZCompressor\LZString::compressToEncodedURIComponent(json_encode($betslip));
+	$redirectUrl = 'https://opaponline.opap.gr?obtl=' . $compressed;
+
+	echo json_encode(array('url' => $redirectUrl));
+}
+else if ($method == 'GET') {
 	$bettype = intval($_GET['bettype']);
 	$selections = $_GET['selections'] ? array_map('intval', explode(',', $_GET['selections'] )) : [];
 	
