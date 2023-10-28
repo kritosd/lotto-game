@@ -1,0 +1,90 @@
+
+#card_table {
+    background-color: #ffdd00;
+    font-family: Calibri;
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #ffdd00;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+.card_header_text {
+    background-color: #ffdd00;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    height: 40px;
+}
+
+.card_main_text {
+    background-color: #FFFAA0;
+    color: black;
+    font-size: 16px;
+    text-align: center;
+    height: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.card_footer_text {
+    background-color: #ff5a1c;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    height: 20px;
+}
+
+#card_main_area_table {
+    background-color: #FFFAA0;
+    height: 100px;
+    vertical-align: middle;
+    margin: 0px;
+}
+
+#card_main_area_table td {
+    border: none;
+}
+
+#card_kino_numbers_table {
+    background-color: #FFFAA0;
+    color: black;
+    margin: 0px;
+    border: none;
+}
+
+#card_kino_header_with_numbers_table {
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0px;
+}
+
+#card_kino_header_with_numbers_table td {
+    border: none;
+}
+
+#card_kino_haeder_numbers_table {
+    background-color: #ffdd00;
+    color: black;
+    margin: 0px;
+    border: none;
+}
+
+.card_kino_noumero {
+    background: #ffa800;
+    color: black;
+    width: 28px;
+    height: 28px;
+    margin: 0 4px 0 0;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 99%;
+    text-align: center;
+    letter-spacing: 0.02em;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0.2rem;
+}

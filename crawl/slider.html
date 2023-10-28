@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Swiper demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="slider.css">
+
+    <style>
+        html,
+        body {
+            position: relative;
+            height: 100%;
+        }
+
+        body {
+            background: #eee;
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        swiper-container {
+            width: 100%;
+            height: 200px;
+        }
+
+        swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            /* background: #fff; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        :root {
+        --swiper-theme-color: black;
+        --swiper-pagination-color: var(--swiper-theme-color);
+        --swiper-pagination-bottom: 0;
+        --swiper-navigation-color: var(--swiper-theme-color);
+       
+        }
+    </style>
+</head>
+
+<body>
+    <div id="carousel"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+
+</body>
+
+<script>
+    getCards();
+    async function getCards() {
+        const url = `https://www.localhost/lotto/ready_kino_files.php`;
+
+        return new Promise((resolve, reject) => {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Assuming the response is JSON content
+                })
+                .then(async (response) => {
+                    await fillCarousel(response.cards);
+                    resolve();
+                })
+                .catch(error => console.error('Error making POST request:', error));
+        });
+
+    }
+
+    async function fillCarousel(cards) {
+        const carousel = document.getElementById('carousel');
+        let rows = '';
+        cards.forEach((card, index) => {
+            rows += `<swiper-slide>${card}</swiper-slide>`;
+        });
+        const swiperContainer = `<swiper-container class="mySwiper" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">${rows}</swiper-container>`;
+        let table = carousel.insertAdjacentHTML('beforeend', `${swiperContainer}`);
+        return;
+    }
+</script>
+
+</html>
