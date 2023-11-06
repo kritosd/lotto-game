@@ -45,11 +45,11 @@
         }
 
         :root {
-        --swiper-theme-color: black;
-        --swiper-pagination-color: var(--swiper-theme-color);
-        --swiper-pagination-bottom: 0;
-        --swiper-navigation-color: var(--swiper-theme-color);
-       
+            --swiper-theme-color: black;
+            --swiper-pagination-color: var(--swiper-theme-color);
+            --swiper-pagination-bottom: 0;
+            --swiper-navigation-color: var(--swiper-theme-color);
+
         }
     </style>
 </head>
@@ -62,9 +62,35 @@
 </body>
 
 <script>
+    let swiperEl,
+        nIntervId;
     getCards();
+
+    async function cardsInterval() {
+        var cur_date = new Date();
+        var hrs = cur_date.getHours();
+        var mnts = cur_date.getMinutes();
+        var secs = cur_date.getSeconds();
+
+        var diff_secs = 60 - secs;
+        var modulo_mnts = ( mnts % 5) ;
+
+        var diff_mnts = 4 - modulo_mnts;
+
+        var rnd_number = Math.floor(Math.random() * 10);
+
+        var refresh_secs = (diff_mnts * 60) + diff_secs + 15 + rnd_number;
+        
+        var refresh_milisecs = refresh_secs * 1000;
+
+        clearInterval(nIntervId);
+        nIntervId = setInterval( getCards , refresh_milisecs );
+    }
+
     async function getCards() {
         const url = `https://www.localhost/lotto/ready_kino_files.php`;
+        
+        cardsInterval();
 
         return new Promise((resolve, reject) => {
             fetch(url)
@@ -75,6 +101,7 @@
                     return response.json(); // Assuming the response is JSON content
                 })
                 .then(async (response) => {
+                    const carouselContainer = document.getElementById('mySwiper');
                     await fillCarousel(response.cards);
                     resolve();
                 })
@@ -85,14 +112,47 @@
 
     async function fillCarousel(cards) {
         const carousel = document.getElementById('carousel');
+        carousel.innerHTML = "";
         let rows = '';
         cards.forEach((card, index) => {
             rows += `<swiper-slide>${card}</swiper-slide>`;
         });
-        const swiperContainer = `<swiper-container class="mySwiper" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">${rows}</swiper-container>`;
+        const swiperContainer = `<swiper-container id="mySwiper" class="mySwiper" observer="true" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">${rows}</swiper-container>`;
         let table = carousel.insertAdjacentHTML('beforeend', `${swiperContainer}`);
+
+        swiperEl = document.querySelector('swiper-container')
+        Object.assign(swiperEl, {
+            // slidesPerView: 1,
+            // spaceBetween: 10,
+            pagination: {
+                clickable: true,
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                },
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 10,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 10,
+                },
+            },
+        });
+
+        swiperEl.initialize();
         return;
     }
+</script>
+<script>
+
 </script>
 
 </html>
