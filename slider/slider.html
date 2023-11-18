@@ -56,16 +56,18 @@
 </head>
 
 <body>
-    <div id="carousel"></div>
+    <!-- <div id="carousel"></div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 
 </body>
 
 <script>
+    var carouselEl = document.getElementById("carousel");
+    var game = carouselEl?.getAttribute('game') ?? null;
     let swiperEl,
         nIntervId;
-    getCards();
+    getCards(game);
 
     async function cardsInterval() {
         var cur_date = new Date();
@@ -88,8 +90,12 @@
         nIntervId = setInterval( getCards , refresh_milisecs );
     }
 
-    async function getCards() {
-        const url = `https://www.localhost/lotto/ready_kino_files.php`;
+    async function getCards(game) {
+        let param = '';
+        if (game) {
+            param = `?game=${game}`;
+        }
+        const url = `https://www.localhost/lotto/ready_kino_files.php${param}`;
         
         cardsInterval();
 
@@ -118,7 +124,7 @@
         cards.forEach((card, index) => {
             rows += `<swiper-slide>${card}</swiper-slide>`;
         });
-        const swiperContainer = `<swiper-container id="mySwiper" class="mySwiper" observer="true" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">${rows}</swiper-container>`;
+        const swiperContainer = `<swiper-container id="mySwiper" class="mySwiper" observer="true" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  >${rows}</swiper-container>`;
         let table = carousel.insertAdjacentHTML('beforeend', `${swiperContainer}`);
 
         swiperEl = document.querySelector('swiper-container')

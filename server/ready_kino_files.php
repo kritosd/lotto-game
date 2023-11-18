@@ -7,6 +7,21 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method == 'GET') {
     $path = './ready_kino_files'; 
+
+    $game = $_GET['game'];
+    switch ($game) {
+        case 'tzoker':
+            $path = './ready_kino_files'; 
+            break;
+
+        case 'kino':
+            $path = './ready_kino_files'; 
+            break;
+        
+        default:
+            $path = './ready_kino_files'; 
+            break;
+    }
     $files = glob($path.'/_ready_kino_card_*');
 
     $array = array();
