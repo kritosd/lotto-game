@@ -87,7 +87,7 @@
         var refresh_milisecs = refresh_secs * 1000;
 
         clearInterval(nIntervId);
-        nIntervId = setInterval( getCards , refresh_milisecs );
+        nIntervId = setInterval( () => getCards(game) , refresh_milisecs );
     }
 
     async function getCards(game) {
@@ -124,7 +124,7 @@
         cards.forEach((card, index) => {
             rows += `<swiper-slide>${card}</swiper-slide>`;
         });
-        const swiperContainer = `<swiper-container id="mySwiper" class="mySwiper" observer="true" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true"  >${rows}</swiper-container>`;
+        const swiperContainer = `<swiper-container id="mySwiper" class="mySwiper" observer="true" pagination="true" pagination-clickable="true" space-between="5" slides-per-view="3" navigation="true" loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false" >${rows}</swiper-container>`;
         let table = carousel.insertAdjacentHTML('beforeend', `${swiperContainer}`);
 
         swiperEl = document.querySelector('swiper-container')
